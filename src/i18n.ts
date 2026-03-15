@@ -1,0 +1,43 @@
+export type Lang = 'en' | 'zh' | 'ja'
+
+export const translations = {
+  en: {
+    title: 'Todo List',
+    dateLocale: 'en-US' as const,
+    addPlaceholder: 'Add a new task...',
+    prioritySelect: { medium: 'Priority: Medium', high: 'Priority: High', low: 'Priority: Low' },
+    clearDone: 'Clear Done',
+    filters: { all: 'All', active: 'Active', done: 'Done' },
+    emptyDone: 'No completed tasks yet',
+    emptyAll: 'No tasks yet, add one!',
+    stats: (total: number, done: number, pct: number) => `${total} total, ${done} done (${pct}%)`,
+    priorityLabel: { high: 'High', medium: 'Med', low: 'Low' },
+    deleteTitle: 'Delete',
+  },
+  zh: {
+    title: '待办清单',
+    dateLocale: 'zh-CN' as const,
+    addPlaceholder: '添加新任务...',
+    prioritySelect: { medium: '优先级：中', high: '优先级：高', low: '优先级：低' },
+    clearDone: '清除已完成',
+    filters: { all: '全部', active: '进行中', done: '已完成' },
+    emptyDone: '还没有完成的任务',
+    emptyAll: '暂无任务，添加一个吧！',
+    stats: (total: number, done: number, pct: number) => `共 ${total} 项，已完成 ${done} 项（${pct}%）`,
+    priorityLabel: { high: '高', medium: '中', low: '低' },
+    deleteTitle: '删除',
+  },
+  ja: {
+    title: 'タスクリスト',
+    dateLocale: 'ja-JP' as const,
+    addPlaceholder: '新しいタスクを追加...',
+    prioritySelect: { medium: '優先度：中', high: '優先度：高', low: '優先度：低' },
+    clearDone: '完了済みを削除',
+    filters: { all: 'すべて', active: '進行中', done: '完了済み' },
+    emptyDone: '完了したタスクはありません',
+    emptyAll: 'タスクがありません。追加してみましょう！',
+    stats: (total: number, done: number, pct: number) => `全${total}件、完了${done}件（${pct}%）`,
+    priorityLabel: { high: '高', medium: '中', low: '低' },
+    deleteTitle: '削除',
+  },
+}

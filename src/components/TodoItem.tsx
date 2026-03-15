@@ -1,5 +1,6 @@
 import { useState, KeyboardEvent } from 'react'
 import { Todo } from '../types'
+import { useLang } from '../LangContext'
 
 interface Props {
   todo: Todo
@@ -8,10 +9,8 @@ interface Props {
   onEdit: (id: number, text: string) => void
 }
 
-const priorityLabel = { high: '高', medium: '中', low: '低' }
-const priorityClass = { high: 'p-high', medium: 'p-medium', low: 'p-low' }
-
 export default function TodoItem({ todo, onToggle, onDelete, onEdit }: Props) {
+  const { t } = useLang()
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(todo.text)
 
@@ -47,11 +46,11 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }: Props) {
           {todo.text}
         </span>
       )}
-      <span className={`priority-badge ${priorityClass[todo.priority]}`}>
-        {priorityLabel[todo.priority]}
+      <span className={`priority-badge p-${todo.priority}`}>
+        {t.priorityLabel[todo.priority]}
       </span>
       <div className="todo-actions">
-        <button className="btn-icon" onClick={() => onDelete(todo.id)} title="删除">🗑</button>
+        <button className="btn-icon" onClick={() => onDelete(todo.id)} title={t.deleteTitle}>🗑</button>
       </div>
     </div>
   )

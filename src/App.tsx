@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { Todo, Filter, Priority } from './types'
+import { LangProvider, useLang } from './LangContext'
 import TodoInput from './components/TodoInput'
 import FilterBar from './components/FilterBar'
 import ProgressBar from './components/ProgressBar'
 import TodoItem from './components/TodoItem'
+import LangSwitcher from './components/LangSwitcher'
 
 function loadTodos(): Todo[] {
   try {
@@ -13,7 +15,8 @@ function loadTodos(): Todo[] {
   }
 }
 
-export default function App() {
+function TodoApp() {
+  const { t } = useLang()
   const [todos, setTodos] = useState<Todo[]>(loadTodos)
   const [filter, setFilter] = useState<Filter>('all')
 
@@ -26,43 +29,45 @@ export default function App() {
   }
 
   const toggleDone = (id: number) => {
-    setTodos(prev => prev.map(t => t.id === id ? { ...t, done: !t.done } : t))
+    setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, done: !todo.done } : todo))
   }
 
   const deleteTodo = (id: number) => {
-    setTodos(prev => prev.filter(t => t.id !== id))
+    setTodos(prev => prev.filter(todo => todo.id !== id))
   }
 
   const editTodo = (id: number, text: string) => {
-    setTodos(prev => prev.map(t => t.id === id ? { ...t, text } : t))
+    setTodos(prev => prev.map(todo => todo.id === id ? { ...todo, text } : todo))
   }
 
   const clearDone = () => {
-    setTodos(prev => prev.filter(t => !t.done))
+    setTodos(prev => prev.filter(todo => !todo.done))
   }
 
-  const visible = todos.filter(t =>
-    filter === 'all' ? true : filter === 'done' ? t.done : !t.done
+  const visible = todos.filter(todo =>
+    filter === 'all' ? true : filter === 'done' ? todo.done : !todo.done
   )
 
-  const dateStr = new Date().toLocaleDateString('zh-CN', {
+  const doneCount = todos.filter(todo => todo.done).length
+  const dateStr = new Date().toLocaleDateString(t.dateLocale, {
     year: 'numeric', month: 'long', day: 'numeric', weekday: 'long',
   })
 
   return (
     <div className="container">
-      <h1>待办清单</h1>
+      <LangSwitcher />
+      <h1>{t.title}</h1>
       <p className="subtitle">{dateStr}</p>
 
       <TodoInput onAdd={addTodo} onClearDone={clearDone} />
-      <ProgressBar total={todos.length} done={todos.filter(t => t.done).length} />
+      <ProgressBar total={todos.length} done={doneCount} />
       <FilterBar filter={filter} onChange={setFilter} />
 
       <div className="todo-list">
         {visible.length === 0 ? (
           <div className="empty-state">
             <div className="icon">{filter === 'done' ? '🎉' : '📝'}</div>
-            {filter === 'done' ? '还没有完成的任务' : '暂无任务，添加一个吧！'}
+            {filter === 'done' ? t.emptyDone : t.emptyAll}
           </div>
         ) : (
           visible.map(todo => (
@@ -79,10 +84,17 @@ export default function App() {
 
       {todos.length > 0 && (
         <div className="stats">
-          共 {todos.length} 项，已完成 {todos.filter(t => t.done).length} 项
-          （{Math.round(todos.filter(t => t.done).length / todos.length * 100)}%）
+          {t.stats(todos.length, doneCount, Math.round(doneCount / todos.length * 100))}
         </div>
       )}
     </div>
+  )
+}
+
+export default function App() {
+  return (
+    <LangProvider>
+      <TodoApp />
+    </LangProvider>
   )
 }

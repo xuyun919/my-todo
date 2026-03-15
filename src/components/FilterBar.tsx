@@ -1,26 +1,24 @@
 import { Filter } from '../types'
+import { useLang } from '../LangContext'
 
 interface Props {
   filter: Filter
   onChange: (f: Filter) => void
 }
 
-const filters: { value: Filter; label: string }[] = [
-  { value: 'all', label: '全部' },
-  { value: 'active', label: '进行中' },
-  { value: 'done', label: '已完成' },
-]
+const filterKeys: Filter[] = ['all', 'active', 'done']
 
 export default function FilterBar({ filter, onChange }: Props) {
+  const { t } = useLang()
   return (
     <div className="filter-bar">
-      {filters.map(f => (
+      {filterKeys.map(f => (
         <button
-          key={f.value}
-          className={filter === f.value ? 'active' : ''}
-          onClick={() => onChange(f.value)}
+          key={f}
+          className={filter === f ? 'active' : ''}
+          onClick={() => onChange(f)}
         >
-          {f.label}
+          {t.filters[f]}
         </button>
       ))}
     </div>

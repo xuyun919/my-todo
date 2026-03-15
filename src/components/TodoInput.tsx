@@ -1,5 +1,6 @@
 import { useState, KeyboardEvent } from 'react'
 import { Priority } from '../types'
+import { useLang } from '../LangContext'
 
 interface Props {
   onAdd: (text: string, priority: Priority) => void
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default function TodoInput({ onAdd, onClearDone }: Props) {
+  const { t } = useLang()
   const [text, setText] = useState('')
   const [priority, setPriority] = useState<Priority>('medium')
 
@@ -29,19 +31,19 @@ export default function TodoInput({ onAdd, onClearDone }: Props) {
           value={text}
           onChange={e => setText(e.target.value)}
           onKeyDown={handleKeyDown}
-          placeholder="添加新任务..."
+          placeholder={t.addPlaceholder}
           maxLength={120}
           autoFocus
         />
-        <button onClick={submit} title="添加">＋</button>
+        <button onClick={submit} title="Add">＋</button>
       </div>
       <div className="add-options">
         <select value={priority} onChange={e => setPriority(e.target.value as Priority)}>
-          <option value="medium">优先级：中</option>
-          <option value="high">优先级：高</option>
-          <option value="low">优先级：低</option>
+          <option value="medium">{t.prioritySelect.medium}</option>
+          <option value="high">{t.prioritySelect.high}</option>
+          <option value="low">{t.prioritySelect.low}</option>
         </select>
-        <button className="clear-done" onClick={onClearDone}>清除已完成</button>
+        <button className="clear-done" onClick={onClearDone}>{t.clearDone}</button>
       </div>
     </>
   )
